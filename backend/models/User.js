@@ -6,29 +6,52 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Name is required'],
     trim: true,
-    maxlength: [50, 'Name cannot exceed 50 characters']
+    minlength: [2, 'Name must be at least 2 characters'],
+    maxlength: [50, 'Name cannot exceed 50 characters'],
+    match: [/^[a-zA-Z\s]+$/, 'Name can only contain letters and spaces']
   },
   email: {
     type: String,
     required: [true, 'Email is required'],
     unique: true,
     lowercase: true,
-    match: [/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/, 'Please enter a valid email']
+    trim: true,
+    maxlength: [254, 'Email address is too long'],
+    match: [
+      /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/,
+      'Please enter a valid email address'
+    ]
   },
   mobile: {
     type: String,
     required: [true, 'Mobile number is required'],
-    match: [/^[0-9]{10}$/, 'Please enter a valid 10-digit mobile number']
+    unique: true,
+    trim: true,
+    match: [/^[6-9]\d{9}$/, 'Please enter a valid 10-digit Indian mobile number (starting with 6-9)']
   },
   password: {
     type: String,
     required: [true, 'Password is required'],
     minlength: [6, 'Password must be at least 6 characters'],
-    select: false
+    maxlength: [128, 'Password cannot exceed 128 characters'],
+    select: false,
+    validate: {
+      validator: function(password) {
+        // Only validate password strength on new passwords (not hashed ones)
+        if (this.isNew || this.isModified('password')) {
+          return /(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(password);
+        }
+        return true;
+      },
+      message: 'Password must contain at least one uppercase letter, one lowercase letter, and one number'
+    }
   },
   role: {
     type: String,
-    enum: ['user', 'admin', 'theater_admin'],
+    enum: {
+      values: ['user', 'admin', 'theater_admin'],
+      message: 'Role must be user, admin, or theater_admin'
+    },
     default: 'user'
   },
   theater: {

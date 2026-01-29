@@ -79,12 +79,22 @@ export default function Login() {
             {...register('email', { 
               required: 'Email is required',
               pattern: {
-                value: /^\S+@\S+$/i,
-                message: 'Invalid email address'
+                value: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/,
+                message: 'Please enter a valid email address'
+              },
+              validate: value => {
+                const trimmed = value.toLowerCase().trim();
+                if (trimmed !== value.toLowerCase()) return 'Email cannot have spaces';
+                if (trimmed.split('@').length !== 2) return 'Email must contain exactly one @ symbol';
+                const [local, domain] = trimmed.split('@');
+                if (local.length === 0) return 'Email must have a username before @';
+                if (domain.length === 0) return 'Email must have a domain after @';
+                if (!domain.includes('.')) return 'Email domain must contain a dot';
+                return true;
               }
             })}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Enter your email"
+            placeholder="Enter your email address"
           />
           {errors.email && (
             <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
@@ -102,6 +112,10 @@ export default function Login() {
               minLength: {
                 value: 6,
                 message: 'Password must be at least 6 characters'
+              },
+              validate: value => {
+                if (value.length > 128) return 'Password cannot exceed 128 characters';
+                return true;
               }
             })}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"

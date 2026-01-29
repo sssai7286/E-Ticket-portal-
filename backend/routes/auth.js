@@ -2,29 +2,58 @@ const express = require('express');
 const User = require('../models/User');
 const { protect, generateToken } = require('../middleware/auth');
 
-// Simple validation helper
+// Enhanced validation helper with better email and phone validation
 const validateInput = (req, res, next) => {
   const errors = [];
+  
+  // Enhanced email validation regex
+  const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+  
+  // Enhanced phone validation - supports Indian mobile numbers
+  const phoneRegex = /^[6-9]\d{9}$/; // Indian mobile numbers start with 6-9 and have 10 digits
   
   if (req.path === '/register') {
     const { name, email, mobile, password, role } = req.body;
     
-    if (!name || name.length < 2 || name.length > 50) {
-      errors.push({ field: 'name', message: 'Name must be 2-50 characters' });
+    // Name validation
+    if (!name || typeof name !== 'string') {
+      errors.push({ field: 'name', message: 'Name is required' });
+    } else if (name.trim().length < 2) {
+      errors.push({ field: 'name', message: 'Name must be at least 2 characters long' });
+    } else if (name.trim().length > 50) {
+      errors.push({ field: 'name', message: 'Name cannot exceed 50 characters' });
+    } else if (!/^[a-zA-Z\s]+$/.test(name.trim())) {
+      errors.push({ field: 'name', message: 'Name can only contain letters and spaces' });
     }
     
-    if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
-      errors.push({ field: 'email', message: 'Please enter a valid email' });
+    // Enhanced email validation
+    if (!email || typeof email !== 'string') {
+      errors.push({ field: 'email', message: 'Email is required' });
+    } else if (!emailRegex.test(email.toLowerCase().trim())) {
+      errors.push({ field: 'email', message: 'Please enter a valid email address (e.g., user@example.com)' });
+    } else if (email.length > 254) {
+      errors.push({ field: 'email', message: 'Email address is too long' });
     }
     
-    if (!mobile || !/^[0-9]{10}$/.test(mobile)) {
-      errors.push({ field: 'mobile', message: 'Please enter a valid 10-digit mobile number' });
+    // Enhanced mobile validation
+    if (!mobile || typeof mobile !== 'string') {
+      errors.push({ field: 'mobile', message: 'Mobile number is required' });
+    } else if (!phoneRegex.test(mobile.trim())) {
+      errors.push({ field: 'mobile', message: 'Please enter a valid 10-digit Indian mobile number (starting with 6-9)' });
     }
     
-    if (!password || password.length < 6) {
-      errors.push({ field: 'password', message: 'Password must be at least 6 characters' });
+    // Password validation
+    if (!password || typeof password !== 'string') {
+      errors.push({ field: 'password', message: 'Password is required' });
+    } else if (password.length < 6) {
+      errors.push({ field: 'password', message: 'Password must be at least 6 characters long' });
+    } else if (password.length > 128) {
+      errors.push({ field: 'password', message: 'Password cannot exceed 128 characters' });
+    } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(password)) {
+      errors.push({ field: 'password', message: 'Password must contain at least one uppercase letter, one lowercase letter, and one number' });
     }
 
+    // Role validation
     if (role && !['user', 'admin', 'theater_admin'].includes(role)) {
       errors.push({ field: 'role', message: 'Role must be user, admin, or theater_admin' });
     }
@@ -33,16 +62,23 @@ const validateInput = (req, res, next) => {
   if (req.path === '/login') {
     const { email, password, role } = req.body;
     
-    if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
-      errors.push({ field: 'email', message: 'Please enter a valid email' });
+    // Email validation for login
+    if (!email || typeof email !== 'string') {
+      errors.push({ field: 'email', message: 'Email is required' });
+    } else if (!emailRegex.test(email.toLowerCase().trim())) {
+      errors.push({ field: 'email', message: 'Please enter a valid email address' });
     }
     
-    if (!password) {
+    // Password validation for login
+    if (!password || typeof password !== 'string') {
       errors.push({ field: 'password', message: 'Password is required' });
+    } else if (password.length < 6) {
+      errors.push({ field: 'password', message: 'Password must be at least 6 characters long' });
     }
 
+    // Role validation
     if (role && !['user', 'admin', 'theater_admin'].includes(role)) {
-      errors.push({ field: 'role', message: 'Role must be user, admin, or theater_admin' });
+      errors.push({ field: 'role', message: 'Invalid role specified' });
     }
   }
   

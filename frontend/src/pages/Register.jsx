@@ -80,7 +80,17 @@ export default function Register() {
             {...register('name', { 
               required: 'Name is required',
               minLength: { value: 2, message: 'Name must be at least 2 characters' },
-              maxLength: { value: 50, message: 'Name cannot exceed 50 characters' }
+              maxLength: { value: 50, message: 'Name cannot exceed 50 characters' },
+              pattern: {
+                value: /^[a-zA-Z\s]+$/,
+                message: 'Name can only contain letters and spaces'
+              },
+              validate: value => {
+                const trimmed = value.trim();
+                if (trimmed.length < 2) return 'Name must be at least 2 characters';
+                if (trimmed !== value) return 'Name cannot have leading or trailing spaces';
+                return true;
+              }
             })}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Enter your full name"
@@ -99,12 +109,26 @@ export default function Register() {
             {...register('email', { 
               required: 'Email is required',
               pattern: {
-                value: /^\S+@\S+$/i,
-                message: 'Invalid email address'
+                value: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/,
+                message: 'Please enter a valid email address (e.g., user@example.com)'
+              },
+              maxLength: {
+                value: 254,
+                message: 'Email address is too long'
+              },
+              validate: value => {
+                const trimmed = value.toLowerCase().trim();
+                if (trimmed !== value.toLowerCase()) return 'Email cannot have spaces';
+                if (trimmed.split('@').length !== 2) return 'Email must contain exactly one @ symbol';
+                const [local, domain] = trimmed.split('@');
+                if (local.length === 0) return 'Email must have a username before @';
+                if (domain.length === 0) return 'Email must have a domain after @';
+                if (!domain.includes('.')) return 'Email domain must contain a dot';
+                return true;
               }
             })}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Enter your email"
+            placeholder="Enter your email (e.g., user@example.com)"
           />
           {errors.email && (
             <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
@@ -120,12 +144,21 @@ export default function Register() {
             {...register('mobile', { 
               required: 'Mobile number is required',
               pattern: {
-                value: /^[0-9]{10}$/,
-                message: 'Please enter a valid 10-digit mobile number'
+                value: /^[6-9]\d{9}$/,
+                message: 'Please enter a valid 10-digit Indian mobile number (starting with 6-9)'
+              },
+              validate: value => {
+                const trimmed = value.trim();
+                if (trimmed !== value) return 'Mobile number cannot have spaces';
+                if (!/^\d+$/.test(trimmed)) return 'Mobile number can only contain digits';
+                if (trimmed.length !== 10) return 'Mobile number must be exactly 10 digits';
+                if (!/^[6-9]/.test(trimmed)) return 'Indian mobile numbers must start with 6, 7, 8, or 9';
+                return true;
               }
             })}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Enter your mobile number"
+            placeholder="Enter 10-digit mobile number (e.g., 9876543210)"
+            maxLength="10"
           />
           {errors.mobile && (
             <p className="text-red-500 text-sm mt-1">{errors.mobile.message}</p>
@@ -143,14 +176,27 @@ export default function Register() {
               minLength: {
                 value: 6,
                 message: 'Password must be at least 6 characters'
+              },
+              maxLength: {
+                value: 128,
+                message: 'Password cannot exceed 128 characters'
+              },
+              validate: value => {
+                if (!/(?=.*[a-z])/.test(value)) return 'Password must contain at least one lowercase letter';
+                if (!/(?=.*[A-Z])/.test(value)) return 'Password must contain at least one uppercase letter';
+                if (!/(?=.*\d)/.test(value)) return 'Password must contain at least one number';
+                return true;
               }
             })}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Enter your password"
+            placeholder="Enter password (min 6 chars, include A-Z, a-z, 0-9)"
           />
           {errors.password && (
             <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>
           )}
+          <div className="mt-1 text-xs text-gray-500">
+            Password must contain: uppercase, lowercase, and number
+          </div>
         </div>
 
         <div>
