@@ -270,9 +270,11 @@ export default function Events() {
                     <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
                       {event.category}
                     </span>
-                    <span className="text-sm text-gray-600">
-                      ₹{Math.min(...event.seats?.map(s => s.price) || [0])}+
-                    </span>
+                    {event.seats && event.seats.length > 0 && (
+                      <span className="text-sm text-gray-600">
+                        ₹{Math.min(...event.seats.map(s => s.price))}+
+                      </span>
+                    )}
                   </div>
                   
                   <h3 className="text-lg font-semibold mb-2 line-clamp-2">{event.title}</h3>
