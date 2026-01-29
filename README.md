@@ -1,133 +1,216 @@
-# E-Ticket Booking Portal
+# 🎫 E-Ticket Booking Portal
 
-A complete full-stack e-ticket booking system with seat management, payment integration, and admin dashboard.
+A complete full-stack e-ticket booking system with interactive seat selection, real-time booking, and comprehensive admin dashboard. Built with modern technologies for scalability and performance.
 
-## Features
+## 🌟 Features
 
 ### 🎫 Core Booking Features
-- **User Authentication** - JWT-based secure login/registration
-- **Event Management** - Browse events by category, date, location
-- **Smart Seat Selection** - Interactive seat map with real-time availability
-- **Seat Locking** - Prevents double booking with 15-minute temporary locks
-- **Payment Integration** - Razorpay payment gateway integration
-- **E-Ticket Generation** - QR code tickets with PDF download
+- **Interactive Seat Selection** - Visual seat map with real-time availability
+- **Smart Seat Locking** - 15-minute temporary locks prevent double booking
+- **User Authentication** - JWT-based secure login/registration with role management
+- **Event Management** - Browse events by category, date, location with advanced filters
+- **Payment Integration** - Razorpay payment gateway ready for production
+- **E-Ticket Generation** - QR code tickets with booking confirmation
 
 ### 🛡️ Security & Performance
-- **Rate Limiting** - Prevents API abuse
-- **Input Validation** - Server-side validation with Joi
+- **Rate Limiting** - Prevents API abuse with configurable limits
+- **Input Validation** - Comprehensive server-side validation
 - **Password Hashing** - bcrypt for secure password storage
-- **Database Transactions** - Ensures data consistency
-- **Role-based Access** - User and Admin role management
+- **Database Transactions** - Ensures data consistency during bookings
+- **Role-based Access** - User, Admin, and Theater Admin roles
 
 ### 📊 Admin Dashboard
-- **Revenue Analytics** - Monthly revenue charts and statistics
+- **Revenue Analytics** - Monthly revenue charts and booking statistics
 - **Booking Management** - View, cancel, and manage all bookings
-- **Event Management** - Create, update, and manage events
+- **Event Management** - Create, update, and manage events with seat layouts
 - **User Management** - View and manage registered users
+- **Theater Management** - Approve and manage theater registrations
 
-## Tech Stack
+### 🎭 Theater Admin Panel
+- **Theater Registration** - Theater owners can register their venues
+- **Event Creation** - Create and manage events for their theaters
+- **Booking Analytics** - View bookings and revenue for their events
+- **Screen Management** - Manage multiple screens and seat layouts
+
+## 🚀 Tech Stack
 
 ### Backend
-- **Node.js** + **Express.js** - Server framework
-- **MongoDB** + **Mongoose** - Database and ODM
-- **JWT** - Authentication
+- **Node.js** + **Express.js** - RESTful API server
+- **MongoDB** + **Mongoose** - Database with schema validation
+- **JWT** - Stateless authentication
 - **Razorpay** - Payment processing
 - **bcryptjs** - Password hashing
-- **express-rate-limit** - API rate limiting
+- **express-rate-limit** - API protection
 
 ### Frontend
-- **React 18** - UI framework
-- **Vite** - Build tool
-- **React Router** - Client-side routing
+- **React 18** - Modern UI framework
+- **Vite** - Lightning-fast build tool
+- **React Router v6** - Client-side routing
 - **React Query** - Server state management
-- **Tailwind CSS** - Styling
-- **React Hook Form** - Form handling
-- **Axios** - HTTP client
+- **Tailwind CSS** - Utility-first styling
+- **React Hook Form** - Performant form handling
+- **Axios** - HTTP client with interceptors
 
-## Quick Start
+## 🏃‍♂️ Quick Start
 
 ### Prerequisites
 - Node.js (v16 or higher)
-- MongoDB (local or cloud)
-- Razorpay account (for payments)
+- MongoDB (local or MongoDB Atlas)
+- Git
 
 ### Installation
 
-1. **Clone and install dependencies**
+1. **Clone the repository**
 ```bash
-git clone <repository-url>
-cd e-ticket-booking-portal
+git clone https://github.com/sssai7286/E-Ticket-portal-.git
+cd E-Ticket-portal-
+```
+
+2. **Install dependencies**
+```bash
 npm install
-cd frontend && npm install
+cd frontend && npm install && cd ..
 ```
 
-2. **Environment Setup**
+3. **Environment Setup**
 ```bash
-# Copy and configure environment variables
-cp .env.example .env
-# Update MongoDB URI, JWT secret, and Razorpay keys
+# Copy environment template
+cp .env.production .env
+# Update with your actual values
 ```
 
-3. **Start Development Servers**
+4. **Database Setup**
 ```bash
-# Start both backend and frontend
+# Seed database with sample data
+npm run seed
+```
+
+5. **Start Development**
+```bash
+# Start both servers
 npm run dev
-
-# Or start individually
-npm run server  # Backend on port 5000
-npm run client  # Frontend on port 3000
 ```
 
-### Environment Variables
+### 🔑 Default Login Credentials
 
-```env
-NODE_ENV=development
-PORT=5000
-MONGODB_URI=mongodb://localhost:27017/eticket-booking
-JWT_SECRET=your-super-secret-jwt-key
-JWT_EXPIRE=7d
+**Admin Login:**
+- Email: `admin@eticket.com`
+- Password: `admin123`
 
-# Razorpay (Test Mode)
-RAZORPAY_KEY_ID=your_razorpay_key_id
-RAZORPAY_KEY_SECRET=your_razorpay_key_secret
+**User Login:**
+- Email: `user@test.com`
+- Password: `user123`
 
-# Email Configuration
-EMAIL_HOST=smtp.gmail.com
-EMAIL_PORT=587
-EMAIL_USER=your-email@gmail.com
-EMAIL_PASS=your-app-password
+## 🌐 Production Deployment
+
+### Local Production
+```bash
+cd frontend && npm run build && cd ..
+node production.js
 ```
 
-## API Endpoints
+### Heroku Deployment
+```bash
+heroku create your-app-name
+heroku config:set NODE_ENV=production
+heroku config:set MONGODB_URI=your_mongodb_uri
+git push heroku main
+```
 
-### Authentication
-- `POST /api/auth/register` - User registration
-- `POST /api/auth/login` - User login
-- `GET /api/auth/profile` - Get user profile
+### VPS Deployment
+```bash
+# Install PM2
+npm install -g pm2
 
-### Events
-- `GET /api/events` - Get all events (with filters)
-- `GET /api/events/:id` - Get single event with seats
-- `POST /api/events` - Create event (Admin only)
+# Build and start
+npm run build
+pm2 start production.js --name "eticket-portal"
+```
 
-### Bookings
-- `POST /api/bookings/lock-seats` - Lock seats temporarily
-- `POST /api/bookings` - Create booking after payment
-- `GET /api/bookings` - Get user bookings
-- `GET /api/bookings/:id` - Get single booking
+## 📁 Project Structure
 
-### Payments
-- `POST /api/payments/create-order` - Create Razorpay order
-- `POST /api/payments/verify` - Verify payment signature
-- `POST /api/payments/webhook` - Handle payment webhooks
+```
+E-Ticket-portal-/
+├── backend/
+│   ├── models/          # Database schemas
+│   ├── routes/          # API endpoints
+│   ├── middleware/      # Auth & validation
+│   ├── seeds/           # Sample data
+│   └── server.js        # Express server
+├── frontend/
+│   ├── src/
+│   │   ├── components/  # Reusable components
+│   │   ├── pages/       # Route components
+│   │   ├── contexts/    # React contexts
+│   │   └── main.jsx     # App entry
+│   └── dist/            # Production build
+├── production.js        # Production server
+└── DEPLOYMENT-GUIDE.md  # Detailed deployment guide
+```
 
-### Admin
-- `GET /api/admin/dashboard` - Dashboard statistics
-- `GET /api/admin/bookings` - All bookings management
-- `GET /api/admin/events` - All events management
-- `GET /api/admin/users` - User management
+## 🎯 Key Features
 
-## Database Schema
+### 💺 Interactive Seat Selection
+- Visual seat map with color-coded categories
+- Real-time seat availability updates
+- Seat locking during booking process
+- Multiple seat selection (up to 10 seats)
+
+### 🔄 Booking Flow
+1. **Browse Events** - Filter by category, date, location
+2. **Select Event** - View details and seat layout
+3. **Choose Seats** - Interactive seat selection
+4. **Lock Seats** - 15-minute reservation
+5. **Payment** - Secure payment processing
+6. **Confirmation** - Booking confirmation with ticket
+
+### 🎭 Event Categories
+- **Movies** - Cinema screenings with multiple showtimes
+- **Concerts** - Live music events and performances
+- **Sports** - Cricket, football, and other sporting events
+- **Theater** - Stage plays and theatrical performances
+- **Comedy** - Stand-up comedy shows and events
+
+### 💰 Pricing Tiers
+- **Platinum** - Premium seats (₹500)
+- **Gold** - Standard seats (₹300)
+- **Silver** - Economy seats (₹200)
+
+## 🔧 API Documentation
+
+### Authentication Endpoints
+```
+POST /api/auth/register    # User registration
+POST /api/auth/login       # User login
+GET  /api/auth/profile     # Get user profile
+```
+
+### Event Endpoints
+```
+GET  /api/events           # List events with filters
+GET  /api/events/:id       # Get event details with seats
+POST /api/events           # Create event (Admin only)
+PUT  /api/events/:id       # Update event (Admin only)
+```
+
+### Booking Endpoints
+```
+POST /api/bookings/lock-seats  # Lock seats temporarily
+POST /api/bookings             # Create booking
+GET  /api/bookings             # Get user bookings
+GET  /api/bookings/:id         # Get booking details
+PUT  /api/bookings/:id/cancel  # Cancel booking
+```
+
+### Admin Endpoints
+```
+GET  /api/admin/dashboard      # Dashboard statistics
+GET  /api/admin/bookings       # All bookings
+GET  /api/admin/users          # User management
+POST /api/admin/events         # Create events
+```
+
+## 🗄️ Database Schema
 
 ### User Model
 ```javascript
@@ -136,8 +219,9 @@ EMAIL_PASS=your-app-password
   email: String (unique),
   mobile: String,
   password: String (hashed),
-  role: ['user', 'admin'],
-  isActive: Boolean
+  role: ['user', 'admin', 'theater_admin'],
+  isActive: Boolean,
+  theater: ObjectId (for theater admins)
 }
 ```
 
@@ -149,10 +233,19 @@ EMAIL_PASS=your-app-password
   category: ['Movie', 'Concert', 'Sports', 'Theater', 'Comedy'],
   dateTime: Date,
   venue: { name, address, city },
-  seats: [{ row, number, category, price, status, lockedUntil, bookedBy }],
+  seats: [{
+    row: String,
+    number: Number,
+    category: ['Silver', 'Gold', 'Platinum'],
+    price: Number,
+    status: ['available', 'booked', 'locked'],
+    lockedUntil: Date,
+    bookedBy: ObjectId
+  }],
   totalSeats: Number,
   availableSeats: Number,
-  isActive: Boolean
+  isActive: Boolean,
+  createdBy: ObjectId
 }
 ```
 
@@ -164,48 +257,32 @@ EMAIL_PASS=your-app-password
   event: ObjectId,
   seats: [{ row, number, category, price }],
   totalAmount: Number,
-  status: ['PENDING', 'CONFIRMED', 'CANCELLED'],
+  status: ['PENDING', 'CONFIRMED', 'CANCELLED', 'REFUNDED'],
   paymentId: String,
-  paymentStatus: ['PENDING', 'SUCCESS', 'FAILED']
+  paymentStatus: ['PENDING', 'SUCCESS', 'FAILED'],
+  qrCode: String,
+  createdAt: Date
 }
 ```
 
-## Key Features Implementation
+## 🔒 Security Features
 
-### 🔒 Seat Locking Mechanism
-- Seats are locked for 15 minutes during booking process
-- Prevents double booking using MongoDB transactions
-- Automatic cleanup of expired locks
+- **JWT Authentication** - Stateless token-based auth
+- **Password Hashing** - bcrypt with salt rounds
+- **Rate Limiting** - Prevent API abuse
+- **Input Validation** - Comprehensive request validation
+- **CORS Configuration** - Cross-origin request handling
+- **Environment Variables** - Secure configuration management
 
-### 💳 Payment Flow
-1. User selects seats → Seats get locked
-2. Payment order created via Razorpay
-3. User completes payment
-4. Payment verified via signature
-5. Booking confirmed, seats marked as booked
+## 📱 Responsive Design
 
-### 🎟️ Ticket Generation
-- QR codes generated for each booking
-- PDF tickets with event and seat details
-- Email delivery of tickets
+The application is fully responsive and optimized for:
+- **Desktop** - Full-featured experience
+- **Tablet** - Touch-optimized interface
+- **Mobile** - Mobile-first responsive design
+- **All Browsers** - Cross-browser compatibility
 
-## Deployment
-
-### Production Build
-```bash
-npm run build
-npm start
-```
-
-### Environment Considerations
-- Set `NODE_ENV=production`
-- Use production MongoDB URI
-- Configure proper CORS settings
-- Set up SSL certificates
-- Configure email service
-- Set up Razorpay webhooks
-
-## Contributing
+## 🤝 Contributing
 
 1. Fork the repository
 2. Create feature branch (`git checkout -b feature/amazing-feature`)
@@ -213,10 +290,17 @@ npm start
 4. Push to branch (`git push origin feature/amazing-feature`)
 5. Open Pull Request
 
-## License
+## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Support
+## 📞 Support
 
-For support, email support@eticket-portal.com or create an issue in the repository.
+For support and questions:
+- Create an issue in the repository
+- Check the [DEPLOYMENT-GUIDE.md](DEPLOYMENT-GUIDE.md) for detailed setup instructions
+- Review the documentation for troubleshooting
+
+---
+
+**Built with ❤️ for seamless event booking experiences**
