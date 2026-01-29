@@ -1,0 +1,36 @@
+{
+  "name": "e-ticket-booking-portal",
+  "version": "1.0.0",
+  "description": "Complete E-Ticket Booking Portal with seat management, payments, and admin dashboard",
+  "main": "server.js",
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "nodemon backend/server.js",
+    "client": "cd frontend && npm run dev",
+    "build": "cd frontend && npm run build",
+    "start": "node backend/server.js",
+    "seed": "node backend/seeds/seedData.js",
+    "setup": "node setup.js",
+    "deploy": "npm run build && npm start",
+    "heroku-postbuild": "cd frontend && npm install && npm run build"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.6",
+    "dotenv": "^16.6.1",
+    "express": "^5.2.1",
+    "express-rate-limit": "^6.11.2",
+    "express-validator": "^7.3.1",
+    "joi": "^17.13.3",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.1.5",
+    "nodemailer": "^7.0.13",
+    "pdfkit": "^0.13.0",
+    "qrcode": "^1.5.4",
+    "razorpay": "^2.9.6"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "nodemon": "^3.1.11"
+  }
+}
