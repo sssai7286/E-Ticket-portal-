@@ -17,7 +17,7 @@ const sampleEvents = [
       address: "Phoenix MarketCity Mall, Whitefield",
       city: "Bangalore"
     },
-    image: "https://images.unsplash.com/photo-1635805737707-575885ab0820?w=500"
+    image: "https://images.unsplash.com/photo-1635805737707-575885ab0820?w=800&h=1200&fit=crop&crop=center"
   },
   {
     title: "Spider-Man: No Way Home",
@@ -29,7 +29,7 @@ const sampleEvents = [
       address: "Forum Mall, Koramangala",
       city: "Bangalore"
     },
-    image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=500"
+    image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=1200&fit=crop&crop=center"
   },
   {
     title: "The Batman",
@@ -68,6 +68,31 @@ const sampleEvents = [
     image: "https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=500"
   },
 
+  // Telugu Movies in Guntur
+  {
+    title: "RRR - Rise Roar Revolt",
+    description: "A fictional story about two legendary revolutionaries and their journey away from home before they started fighting for their country in 1920s. An epic tale of friendship, sacrifice, and the fight for freedom.",
+    category: "Movie",
+    dateTime: new Date('2024-02-20T18:00:00'),
+    venue: {
+      name: "Sudarshan 35MM",
+      address: "Brodipet Main Road",
+      city: "Guntur"
+    },
+    image: "https://images.unsplash.com/photo-1489599904472-84978f312f2e?w=800&h=1200&fit=crop&crop=center"
+  },
+  {
+    title: "Pushpa: The Rise",
+    description: "A laborer named Pushpa makes enemies as he rises in the world of red sandalwood smuggling. However, violence erupts when the police attempt to bring down his illegal business.",
+    category: "Movie",
+    dateTime: new Date('2024-02-21T20:30:00'),
+    venue: {
+      name: "Cinepolis Guntur",
+      address: "Vijaya Krishna Mall, Lakshmipuram",
+      city: "Guntur"
+    },
+    image: "https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=800&h=1200&fit=crop&crop=center"
+
   // Concerts
   {
     title: "AR Rahman Live in Concert",
@@ -79,7 +104,7 @@ const sampleEvents = [
       address: "Jayamahal Road, Near Cantonment Railway Station",
       city: "Bangalore"
     },
-    image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=500"
+    image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800&h=600&fit=crop&crop=center"
   },
   {
     title: "Coldplay World Tour",
@@ -117,7 +142,7 @@ const sampleEvents = [
       address: "Cubbon Park, Queens Road",
       city: "Bangalore"
     },
-    image: "https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?w=500"
+    image: "https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?w=800&h=600&fit=crop&crop=center"
   },
   {
     title: "Bengaluru FC vs Mumbai City FC",
@@ -143,7 +168,7 @@ const sampleEvents = [
       address: "36/2, 8th Cross, 4th Block, Jayanagar",
       city: "Bangalore"
     },
-    image: "https://images.unsplash.com/photo-1507924538820-ede94a04019d?w=500"
+    image: "https://images.unsplash.com/photo-1507924538820-ede94a04019d?w=800&h=600&fit=crop&crop=center"
   },
   {
     title: "The Lion King Musical",
@@ -169,7 +194,7 @@ const sampleEvents = [
       address: "Whitefield Main Road, Mahadevapura",
       city: "Bangalore"
     },
-    image: "https://images.unsplash.com/photo-1527224857830-43a7acc85260?w=500"
+    image: "https://images.unsplash.com/photo-1527224857830-43a7acc85260?w=800&h=600&fit=crop&crop=center"
   },
   {
     title: "Kenny Sebastian - The Most Interesting Person",
