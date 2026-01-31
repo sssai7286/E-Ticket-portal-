@@ -1,0 +1,146 @@
+import { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { useForm } from 'react-hook-form'
+import { useAuth } from '../contexts/AuthContext'
+import toast from 'react-hot-toast'
+import { User, Shield } from 'lucide-react'
+
+export default function Login() {
+  const [loading, setLoading] = useState(false)
+  const { login } = useAuth()
+  const navigate = useNavigate()
+  const { register, handleSubmit, formState: { errors }, watch } = useForm({
+    defaultValues: { role: 'user' }
+  })
+
+  const selectedRole = watch('role')
+
+  const onSubmit = async (data) => {
+    setLoading(true)
+    try {
+      const result = await login(data.email, data.password, data.role)
+      if (result.success) {
+        toast.success('Login successful!')
+        navigate(data.role === 'admin' ? '/admin/dashboard' : '/')
+      } else {
+        toast.error(result.message)
+      }
+    } catch (error) {
+      toast.error('Login failed. Please try again.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <div className="max-w-md mx-auto bg-white rounded-lg shadow-md p-8">
+      <h2 className="text-2xl font-bold text-center mb-6">Login to Your Account</h2>
+      
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        {/* Role Selection */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-3">
+            Login as
+          </label>
+          <div className="grid grid-cols-2 gap-3">
+            <label className={`flex items-center p-3 border-2 rounded-lg cursor-pointer transition-colors ${
+              selectedRole === 'user' ? 'border-blue-500 bg-blue-50' : 'border-gray-300'
+            }`}>
+              <input
+                type="radio"
+                value="user"
+                {...register('role')}
+                className="sr-only"
+              />
+              <User className="w-5 h-5 mr-2 text-blue-600" />
+              <span className="font-medium">User</span>
+            </label>
+            <label className={`flex items-center p-3 border-2 rounded-lg cursor-pointer transition-colors ${
+              selectedRole === 'admin' ? 'border-blue-500 bg-blue-50' : 'border-gray-300'
+            }`}>
+              <input
+                type="radio"
+                value="admin"
+                {...register('role')}
+                className="sr-only"
+              />
+              <Shield className="w-5 h-5 mr-2 text-green-600" />
+              <span className="font-medium">Admin</span>
+            </label>
+          </div>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Email Address
+          </label>
+          <input
+            type="email"
+            {...register('email', { 
+              required: 'Email is required',
+              pattern: {
+                value: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/,
+                message: 'Please enter a valid email address'
+              },
+              validate: value => {
+                const trimmed = value.toLowerCase().trim();
+                if (trimmed !== value.toLowerCase()) return 'Email cannot have spaces';
+                if (trimmed.split('@').length !== 2) return 'Email must contain exactly one @ symbol';
+                const [local, domain] = trimmed.split('@');
+                if (local.length === 0) return 'Email must have a username before @';
+                if (domain.length === 0) return 'Email must have a domain after @';
+                if (!domain.includes('.')) return 'Email domain must contain a dot';
+                return true;
+              }
+            })}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Enter your email address"
+          />
+          {errors.email && (
+            <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
+          )}
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Password
+          </label>
+          <input
+            type="password"
+            {...register('password', { 
+              required: 'Password is required',
+              minLength: {
+                value: 6,
+                message: 'Password must be at least 6 characters'
+              },
+              validate: value => {
+                if (value.length > 128) return 'Password cannot exceed 128 characters';
+                return true;
+              }
+            })}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Enter your password"
+          />
+          {errors.password && (
+            <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>
+          )}
+        </div>
+
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+        >
+          {loading ? 'Logging in...' : `Login as ${selectedRole === 'admin' ? 'Admin' : 'User'}`}
+        </button>
+      </form>
+
+      <p className="text-center mt-4 text-sm text-gray-600">
+        Don't have an account?{' '}
+        <Link to="/register" className="text-blue-600 hover:underline">
+          Register here
+        </Link>
+      </p>
+    </div>
+  )
+}
